@@ -24,6 +24,24 @@ func AlipayCallback(form url.Values) (*alipay.TradeNotification, error) {
 	return getAlipayTradeNotification(form)
 }
 
+func Notification(platform platform, isSuccess bool) string {
+	switch platform {
+	case Wxpay:
+		noti := wxpay.Notifies{}
+		if !isSuccess {
+			return noti.NotOK("faild")
+		}
+		return noti.OK()
+	case Alipay:
+		if !isSuccess {
+			return "faild"
+		}
+		return "success"
+	default:
+		return ""
+	}
+}
+
 func getAlipayTradeNotification(req url.Values) (*alipay.TradeNotification, error) {
 	if ok, _ := alipayClient.VerifySign(req); !ok {
 		return nil, fmt.Errorf("签名失败")
