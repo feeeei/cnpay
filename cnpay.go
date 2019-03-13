@@ -2,6 +2,8 @@ package cnpay
 
 import (
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/objcoding/wxpay"
 	"github.com/smartwalle/alipay"
@@ -60,8 +62,24 @@ func AlipayPay(tradePay *TradePay) (map[string]string, error) {
 func WxpayPay(tradePay *TradePay) (map[string]string, error) {
 	params, err := wxClient.UnifiedOrder(tradePay.ToWxpay())
 	if err == nil {
-		return map[string]string(params), nil
+		return translateWxpayAppResult(tradePay, params), nil
 	} else {
 		return nil, err
+	}
+}
+
+func translateWxpayAppResult(tradePay *TradePay, params wxpay.Params) map[string]string {
+	if tradePay.DeviceType == App {
+		p := make(wxpay.Params)
+		p["appid"] = params["appid"]
+		p["partnerid"] = params["mch_id"]
+		p["noncestr"] = params["nonce_str"]
+		p["prepayid"] = params["prepay_id"]
+		p["timestamp"] = strconv.FormatInt(time.Now().Unix(), 10)
+		p["package"] = "Sign=WXPay"
+		p["sign"] = wxClient.Sign(p)
+		return map[string]string(p)
+	} else {
+		return map[string]string(params)
 	}
 }
