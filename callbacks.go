@@ -24,7 +24,7 @@ func AlipayCallback(form url.Values) (*alipay.TradeNotification, error) {
 	return getAlipayTradeNotification(form)
 }
 
-func Notification(platform platform, isSuccess bool) string {
+func Notification(platform Platform, isSuccess bool) string {
 	switch platform {
 	case Wxpay:
 		noti := wxpay.Notifies{}

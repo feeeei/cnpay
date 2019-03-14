@@ -34,6 +34,22 @@ func Pay(tradePay *TradePay) (map[string]string, error) {
 	}
 }
 
+func Refund(refund *TradeRefund) (interface{}, error) {
+	switch refund.Platform {
+	case Alipay:
+		return alipayClient.TradeRefund(*refund.ToAlipay())
+	case Wxpay:
+		resp, err := wxClient.Refund(refund.ToWxpay())
+		if err != nil {
+			return nil, err
+		}
+		result := map[string]string(resp)
+		return result, nil
+	default:
+		return nil, fmt.Errorf("Unknow platform")
+	}
+}
+
 func AlipayPay(tradePay *TradePay) (map[string]string, error) {
 	ali := tradePay.ToAlipay()
 	resp := make(map[string]string)
@@ -63,9 +79,8 @@ func WxpayPay(tradePay *TradePay) (map[string]string, error) {
 	params, err := wxClient.UnifiedOrder(tradePay.ToWxpay())
 	if err == nil {
 		return translateWxpayAppResult(tradePay, params), nil
-	} else {
-		return nil, err
 	}
+	return nil, err
 }
 
 func translateWxpayAppResult(tradePay *TradePay, params wxpay.Params) map[string]string {

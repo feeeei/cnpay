@@ -1,20 +1,9 @@
 package cnpay
 
 import (
-	"fmt"
-
 	"github.com/objcoding/wxpay"
-	"github.com/shopspring/decimal"
 
 	"github.com/smartwalle/alipay"
-)
-
-type platform int
-
-const (
-	_ platform = iota
-	Wxpay
-	Alipay
 )
 
 type deviceType int
@@ -26,7 +15,7 @@ const (
 )
 
 type TradePay struct {
-	Platform   platform
+	Platform   Platform
 	DeviceType deviceType
 	NotifyURL  string
 	Subject    string
@@ -52,16 +41,6 @@ func (pay *TradePay) ToWxpay() wxpay.Params {
 		"out_trade_no": pay.TradeNo,
 		"body":         pay.Subject,
 	}
-}
-
-func alipayAmount(amount float64) string {
-	return fmt.Sprint(amount)
-}
-
-func wxpayAmount(amount float64) string {
-	aDecimal := decimal.NewFromFloat(amount)
-	bDecimal := decimal.NewFromFloat(100)
-	return aDecimal.Mul(bDecimal).Truncate(0).String()
 }
 
 func (pay *TradePay) deviceType() string {
