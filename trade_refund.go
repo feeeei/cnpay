@@ -20,7 +20,6 @@ func (refund *TradeRefund) ToWxpay() wxpay.Params {
 		"out_refund_no": refund.RefundNo,
 		"total_fee":     wxpayAmount(refund.TotalAmount),
 		"refund_fee":    wxpayAmount(refund.RefundAmount),
-		"refund_desc":   refund.RefundReason,
 	}
 }
 
