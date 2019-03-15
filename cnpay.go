@@ -20,7 +20,7 @@ func InitWxpay(appID, mchID, apiKey, certPath string, debug bool) {
 }
 
 func InitAlipay(appID, aliPublicKey, privateKey string, debug bool) {
-	alipayClient = alipay.New(appID, aliPublicKey, privateKey, debug)
+	alipayClient = alipay.New(appID, aliPublicKey, privateKey, !debug)
 }
 
 func Pay(tradePay *TradePay) (map[string]string, error) {

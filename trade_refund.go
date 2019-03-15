@@ -25,9 +25,7 @@ func (refund *TradeRefund) ToWxpay() wxpay.Params {
 
 func (refund *TradeRefund) ToAlipay() *alipay.AliPayTradeRefund {
 	return &alipay.AliPayTradeRefund{
-		TradeNo:      refund.TradeNo,
-		OutRequestNo: refund.RefundNo,
+		OutTradeNo:   refund.TradeNo,
 		RefundAmount: alipayAmount(refund.RefundAmount),
-		RefundReason: refund.RefundReason,
 	}
 }
